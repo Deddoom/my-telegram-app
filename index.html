@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ربات هوش مصنوعی</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Telegram Web App Script -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        /* A simple style to make the app feel more native */
+        body {
+            background-color: var(--tg-theme-bg-color, #212121);
+            color: var(--tg-theme-text-color, #ffffff);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .main-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+        .grid-button {
+            background-color: var(--tg-theme-secondary-bg-color, #333333);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100px; /* Fixed height for uniform buttons */
+        }
+        .grid-button:hover {
+            background-color: var(--tg-theme-button-hover-color, #444444);
+        }
+        .grid-button .icon {
+            font-size: 2rem; /* 32px */
+            margin-bottom: 8px;
+        }
+        .grid-button .text {
+            font-size: 0.875rem; /* 14px */
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <h1 class="text-2xl font-bold text-center mb-6">به ربات هوش مصنوعی خوش آمدید</h1>
+
+        <!-- Grid layout for buttons -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <!-- چت با هوش مصنوعی -->
+            <div class="grid-button" onclick="sendData('ai_chat')">
+                <div class="icon">💬</div>
+                <div class="text">چت با هوش مصنوعی</div>
+            </div>
+            <!-- حذف پس زمینه -->
+            <div class="grid-button" onclick="sendData('remove_bg')">
+                <div class="icon">🖼️</div>
+                <div class="text">حذف پس زمینه</div>
+            </div>
+            <!-- مقایسه محصولات -->
+            <div class="grid-button" onclick="sendData('compare_products')">
+                <div class="icon">🔍</div>
+                <div class="text">مقایسه محصولات</div>
+            </div>
+            <!-- ساخت مقاله -->
+            <div class="grid-button" onclick="sendData('create_article')">
+                <div class="icon">📰</div>
+                <div class="text">ساخت مقاله</div>
+            </div>
+            <!-- اطلاعات عکس -->
+            <div class="grid-button" onclick="sendData('image_info')">
+                <div class="icon">ℹ️</div>
+                <div class="text">اطلاعات عکس</div>
+            </div>
+            <!-- افزایش کیفیت عکس -->
+            <div class="grid-button" onclick="sendData('enhance_image')">
+                <div class="icon">🌄</div>
+                <div class="text">افزایش کیفیت عکس</div>
+            </div>
+            <!-- تبدیل عکس (جیبلی) -->
+            <div class="grid-button" onclick="sendData('ghibli_transform')">
+                <div class="icon">🎑</div>
+                <div class="text">تبدیل عکس (جیبلی)</div>
+            </div>
+            <!-- ساخت عکس -->
+            <div class="grid-button" onclick="sendData('create_image')">
+                <div class="icon">✨</div>
+                <div class="text">ساخت عکس</div>
+            </div>
+            <!-- ترجمه متن -->
+            <div class="grid-button" onclick="sendData('translate_text')">
+                <div class="icon">🌐</div>
+                <div class="text">ترجمه متن</div>
+            </div>
+            <!-- نرخ ارز -->
+            <div class="grid-button" onclick="sendData('currency_rates')">
+                <div class="icon">💹</div>
+                <div class="text">نرخ ارز</div>
+            </div>
+            <!-- جستجوی پیشرفته -->
+            <div class="grid-button" onclick="sendData('advanced_search')">
+                <div class="icon">🔎</div>
+                <div class="text">جستجوی پیشرفته</div>
+            </div>
+            <!-- راهنما و پشتیبانی -->
+            <div class="grid-button" onclick="sendData('help_support')">
+                <div class="icon">💁‍♂️</div>
+                <div class="text">راهنما و پشتیبانی</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize the Telegram Web App object
+        const tg = window.Telegram.WebApp;
+
+        // This function sends data to the bot.
+        // The bot will receive this as a WebViewResult event.
+        function sendData(command) {
+            // Vibrate to give user feedback
+            tg.HapticFeedback.impactOccurred('light');
+            
+            // Send the command string to the bot
+            tg.sendData(command);
+            
+            // You can optionally close the Mini App after a command is sent
+            // tg.close();
+        }
+
+        // Inform Telegram that the app is ready.
+        // This will make the main button visible if it was configured.
+        tg.ready();
+
+        // Expand the app to full height
+        tg.expand();
+    </script>
+</body>
+</html>
