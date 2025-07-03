@@ -4,142 +4,310 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ربات هوش مصنوعی</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Telegram Web App Script -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* A simple style to make the app feel more native */
+        :root {
+            --tg-theme-bg-color: #212121;
+            --tg-theme-text-color: #ffffff;
+            --tg-theme-hint-color: #aaaaaa;
+            --tg-theme-link-color: #8774e1;
+            --tg-theme-button-color: #8774e1;
+            --tg-theme-button-text-color: #ffffff;
+            --tg-theme-secondary-bg-color: #333333;
+        }
         body {
-            background-color: var(--tg-theme-bg-color, #212121);
-            color: var(--tg-theme-text-color, #ffffff);
+            background-color: var(--tg-theme-bg-color);
+            color: var(--tg-theme-text-color);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            margin: 0;
+            padding: 0;
         }
-        .main-container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 16px;
-        }
-        .grid-button {
-            background-color: var(--tg-theme-secondary-bg-color, #333333);
-            border-radius: 12px;
-            padding: 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100px; /* Fixed height for uniform buttons */
-        }
-        .grid-button:hover {
-            background-color: var(--tg-theme-button-hover-color, #444444);
-        }
-        .grid-button .icon {
-            font-size: 2rem; /* 32px */
-            margin-bottom: 8px;
-        }
-        .grid-button .text {
-            font-size: 0.875rem; /* 14px */
-            font-weight: 500;
-        }
+        .app-container { max-width: 600px; margin: 0 auto; padding: 16px; }
+        .grid-button { background-color: var(--tg-theme-secondary-bg-color); border-radius: 12px; padding: 12px; text-align: center; cursor: pointer; transition: background-color 0.2s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100px; }
+        .page { display: none; }
+        .page.active { display: block; }
+        .back-button, .submit-button { margin-top: 16px; width: 100%; background-color: var(--tg-theme-button-color); color: var(--tg-theme-button-text-color); padding: 10px 0; border-radius: 8px; border: none; cursor: pointer; font-size: 16px; }
+        .form-input, .form-textarea { width: 100%; box-sizing: border-box; padding: 10px; border-radius: 6px; background-color: var(--tg-theme-secondary-bg-color); border: 1px solid var(--tg-theme-hint-color); color: var(--tg-theme-text-color); margin-bottom: 10px; }
+        .result-box { margin-top: 16px; padding: 12px; background-color: rgba(0,0,0,0.2); border-radius: 8px; min-height: 50px; white-space: pre-wrap; word-wrap: break-word; line-height: 1.6; }
+        .loader { text-align: center; padding: 20px; color: var(--tg-theme-hint-color); }
+        .result-image { max-width: 100%; border-radius: 8px; margin-top: 10px; }
+        h2 { font-size: 1.25rem; font-weight: bold; margin-bottom: 1rem; }
+        p.description { margin-bottom: 1rem; font-size: 0.875rem; color: var(--tg-theme-hint-color); }
     </style>
 </head>
 <body>
-    <div class="main-container">
-        <h1 class="text-2xl font-bold text-center mb-6">به ربات هوش مصنوعی خوش آمدید</h1>
+    <div class="app-container">
 
-        <!-- Grid layout for buttons -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            <!-- چت با هوش مصنوعی -->
-            <div class="grid-button" onclick="sendData('ai_chat')">
-                <div class="icon">💬</div>
-                <div class="text">چت با هوش مصنوعی</div>
+        <div id="page-main-menu" class="page active">
+            <h1 class="text-2xl font-bold text-center mb-6">ربات هوش مصنوعی</h1>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                <div class="grid-button" onclick="sendData('ai_chat')"><div class="text-3xl">💬</div><div>چت با AI</div></div>
+                <div class="grid-button" onclick="showPage('page-remove-bg')"><div class="text-3xl">🖼️</div><div>حذف پس زمینه</div></div>
+                <div class="grid-button" onclick="showPage('page-compare-products')"><div class="text-3xl">🔍</div><div>مقایسه محصولات</div></div>
+                <div class="grid-button" onclick="showPage('page-create-article')"><div class="text-3xl">📰</div><div>ساخت مقاله</div></div>
+                <div class="grid-button" onclick="showPage('page-image-info')"><div class="text-3xl">ℹ️</div><div>اطلاعات عکس</div></div>
+                <div class="grid-button" onclick="showPage('page-enhance-image')"><div class="text-3xl">🌄</div><div>افزایش کیفیت</div></div>
+                <div class="grid-button" onclick="showPage('page-ghibli')"><div class="text-3xl">🎑</div><div>تبدیل عکس</div></div>
+                <div class="grid-button" onclick="showPage('page-create-image')"><div class="text-3xl">✨</div><div>ساخت عکس</div></div>
+                <div class="grid-button" onclick="showPage('page-translate')"><div class="text-3xl">🌐</div><div>ترجمه متن</div></div>
+                <div class="grid-button" onclick="showPage('page-currency')"><div class="text-3xl">💹</div><div>نرخ ارز</div></div>
+                <div class="grid-button" onclick="showPage('page-advanced-search')"><div class="text-3xl">🔎</div><div>جستجوی پیشرفته</div></div>
+                <div class="grid-button" onclick="showPage('page-help')"><div class="text-3xl">💁‍♂️</div><div>راهنما</div></div>
             </div>
-            <!-- حذف پس زمینه -->
-            <div class="grid-button" onclick="sendData('remove_bg')">
-                <div class="icon">🖼️</div>
-                <div class="text">حذف پس زمینه</div>
-            </div>
-            <!-- مقایسه محصولات -->
-            <div class="grid-button" onclick="sendData('compare_products')">
-                <div class="icon">🔍</div>
-                <div class="text">مقایسه محصولات</div>
-            </div>
-            <!-- ساخت مقاله -->
-            <div class="grid-button" onclick="sendData('create_article')">
-                <div class="icon">📰</div>
-                <div class="text">ساخت مقاله</div>
-            </div>
-            <!-- اطلاعات عکس -->
-            <div class="grid-button" onclick="sendData('image_info')">
-                <div class="icon">ℹ️</div>
-                <div class="text">اطلاعات عکس</div>
-            </div>
-            <!-- افزایش کیفیت عکس -->
-            <div class="grid-button" onclick="sendData('enhance_image')">
-                <div class="icon">🌄</div>
-                <div class="text">افزایش کیفیت عکس</div>
-            </div>
-            <!-- تبدیل عکس (جیبلی) -->
-            <div class="grid-button" onclick="sendData('ghibli_transform')">
-                <div class="icon">🎑</div>
-                <div class="text">تبدیل عکس (جیبلی)</div>
-            </div>
-            <!-- ساخت عکس -->
-            <div class="grid-button" onclick="sendData('create_image')">
-                <div class="icon">✨</div>
-                <div class="text">ساخت عکس</div>
-            </div>
-            <!-- ترجمه متن -->
-            <div class="grid-button" onclick="sendData('translate_text')">
-                <div class="icon">🌐</div>
-                <div class="text">ترجمه متن</div>
-            </div>
-            <!-- نرخ ارز -->
-            <div class="grid-button" onclick="sendData('currency_rates')">
-                <div class="icon">💹</div>
-                <div class="text">نرخ ارز</div>
-            </div>
-            <!-- جستجوی پیشرفته -->
-            <div class="grid-button" onclick="sendData('advanced_search')">
-                <div class="icon">🔎</div>
-                <div class="text">جستجوی پیشرفته</div>
-            </div>
-            <!-- راهنما و پشتیبانی -->
-            <div class="grid-button" onclick="sendData('help_support')">
-                <div class="icon">💁‍♂️</div>
-                <div class="text">راهنما و پشتیبانی</div>
-            </div>
+        </div>
+
+        <div id="page-remove-bg" class="page">
+            <h2>🖼️ حذف پس زمینه</h2>
+            <p class="description">فایل عکس خود را برای حذف پس‌زمینه آپلود کنید.</p>
+            <input type="file" id="remove-bg-input" class="form-input" accept="image/*">
+            <button class="submit-button" onclick="handleImageUpload('remove-bg')">ارسال</button>
+            <div id="remove-bg-result" class="result-box"></div>
+            <button onclick="goBack()" class="back-button">بازگشت</button>
+        </div>
+
+        <div id="page-compare-products" class="page">
+            <h2>🔍 مقایسه محصولات</h2>
+            <p class="description">نام دو محصول (مثلا از دیجی‌کالا) را برای مقایسه وارد کنید.</p>
+            <input type="text" id="compare-products-input-1" class="form-input" placeholder="نام محصول اول">
+            <input type="text" id="compare-products-input-2" class="form-input" placeholder="نام محصول دوم">
+            <button class="submit-button" onclick="handleCompareProducts()">مقایسه کن</button>
+            <div id="compare-products-result" class="result-box"></div>
+            <button onclick="goBack()" class="back-button">بازگشت</button>
+        </div>
+        
+        <div id="page-create-article" class="page">
+            <h2>📰 ساخت مقاله</h2>
+            <p class="description">موضوع مقاله را وارد کنید.</p>
+            <input type="text" id="create-article-input" class="form-input" placeholder="مثال: تاثیر هوش مصنوعی بر اشتغال">
+            <button class="submit-button" onclick="handleTextSubmit('create-article')">مقاله بساز</button>
+            <div id="create-article-result" class="result-box"></div>
+            <button onclick="goBack()" class="back-button">بازگشت</button>
+        </div>
+        
+        <div id="page-image-info" class="page">
+            <h2>ℹ️ اطلاعات عکس</h2>
+            <p class="description">عکسی را آپلود کنید تا اطلاعات آن استخراج شود.</p>
+            <input type="file" id="image-info-input" class="form-input" accept="image/*">
+            <button class="submit-button" onclick="handleImageUpload('image-info')">دریافت اطلاعات</button>
+            <div id="image-info-result" class="result-box"></div>
+            <button onclick="goBack()" class="back-button">بازگشت</button>
+        </div>
+
+        <div id="page-enhance-image" class="page">
+            <h2>🌄 افزایش کیفیت عکس</h2>
+            <p class="description">عکس بی‌کیفیت خود را برای بهبود آپلود کنید.</p>
+            <input type="file" id="enhance-image-input" class="form-input" accept="image/*">
+            <button class="submit-button" onclick="handleImageUpload('enhance-image')">ارسال</button>
+            <div id="enhance-image-result" class="result-box"></div>
+            <button onclick="goBack()" class="back-button">بازگشت</button>
+        </div>
+        
+        <div id="page-ghibli" class="page">
+            <h2>🎑 تبدیل عکس</h2>
+            <p class="description">عکس خود را برای تبدیل به سبک هنری آپلود کنید.</p>
+            <input type="file" id="ghibli-input" class="form-input" accept="image/*">
+            <button class="submit-button" onclick="handleImageUpload('ghibli')">تبدیل کن</button>
+            <div id="ghibli-result" class="result-box"></div>
+            <button onclick="goBack()" class="back-button">بازگشت</button>
+        </div>
+
+        <div id="page-create-image" class="page">
+            <h2>✨ ساخت عکس</h2>
+            <p class="description">توضیحات عکس را به انگلیسی بنویسید.</p>
+            <textarea id="create-image-input" class="form-textarea" rows="3" placeholder="e.g., a cute cat astronaut on Mars, digital art"></textarea>
+            <button class="submit-button" onclick="handleTextSubmit('create-image')">عکس بساز</button>
+            <div id="create-image-result" class="result-box"></div>
+            <button onclick="goBack()" class="back-button">بازگشت</button>
+        </div>
+
+        <div id="page-translate" class="page">
+            <h2>🌐 ترجمه متن</h2>
+            <p class="description">متن مورد نظر برای ترجمه به فارسی را وارد کنید.</p>
+            <textarea id="translate-input" class="form-textarea" rows="5" placeholder="متن خود را اینجا بنویسید..."></textarea>
+            <button class="submit-button" onclick="handleTextSubmit('translate')">ترجمه کن</button>
+            <div id="translate-result" class="result-box"></div>
+            <button onclick="goBack()" class="back-button">بازگشت</button>
+        </div>
+
+        <div id="page-currency" class="page">
+            <h2>💹 آخرین نرخ ارز و طلا</h2>
+            <div id="currency-content" class="result-box"></div>
+            <button onclick="goBack()" class="back-button">بازگشت</button>
+        </div>
+
+        <div id="page-advanced-search" class="page">
+            <h2>🔎 جستجوی پیشرفته</h2>
+            <p class="description">در محتوای یک کانال عمومی تلگرام جستجوی هوشمند انجام دهید.</p>
+            <input type="text" id="advanced-search-channel-input" class="form-input" placeholder="یوزرنیم یا لینک کانال (e.g., @OpenAI)">
+            <input type="text" id="advanced-search-query-input" class="form-input" placeholder="عبارت مورد نظر برای جستجو">
+            <button class="submit-button" onclick="handleAdvancedSearch()">جستجو کن</button>
+            <div id="advanced-search-result" class="result-box"></div>
+            <button onclick="goBack()" class="back-button">بازگشت</button>
+        </div>
+        
+        <div id="page-help" class="page">
+             <h2>💁‍♂️ راهنما</h2>
+             <div class="text-sm space-y-3 result-box">
+                <p>به ربات هوشمند خوش آمدید! با استفاده از منوی اصلی می‌توانید از قابلیت‌های مختلف استفاده کنید.</p>
+                <p>برای استفاده از هر قابلیت، روی دکمه مربوطه کلیک کرده و دستورالعمل‌های آن صفحه را دنبال کنید.</p>
+                <p>برای قابلیت‌هایی که نیاز به ارسال فایل دارند (مانند حذف پس‌زمینه)، پس از انتخاب فایل روی دکمه "ارسال" کلیک کنید.</p>
+             </div>
+             <button onclick="goBack()" class="back-button">بازگشت</button>
         </div>
     </div>
 
     <script>
-        // Initialize the Telegram Web App object
         const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+        tg.BackButton.onClick(goBack);
 
-        // This function sends data to the bot.
-        // The bot will receive this as a WebViewResult event.
-        function sendData(command) {
-            // Vibrate to give user feedback
+        const API_BASE_URL = 'http://212.34.133.75:8080'; // IP سرور شما
+
+        // --- NAVIGATION LOGIC ---
+        function showPage(pageId) {
             tg.HapticFeedback.impactOccurred('light');
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            const newPage = document.getElementById(pageId);
+            newPage.classList.add('active');
             
-            // Send the command string to the bot
-            tg.sendData(command);
-            
-            // You can optionally close the Mini App after a command is sent
-            // tg.close();
+            if (pageId !== 'page-main-menu') {
+                tg.BackButton.show();
+            }
+
+            if (pageId === 'page-currency') fetchCurrencyRates();
         }
 
-        // Inform Telegram that the app is ready.
-        // This will make the main button visible if it was configured.
-        tg.ready();
+        function goBack() {
+            showPage('page-main-menu');
+            tg.BackButton.hide();
+        }
 
-        // Expand the app to full height
-        tg.expand();
+        // --- HANDLER FUNCTIONS ---
+        function sendData(command) {
+            tg.HapticFeedback.impactOccurred('light');
+            tg.sendData(command);
+            tg.close();
+        }
+        
+        async function apiCall(endpoint, options) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/${endpoint}`, options);
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({error: "خطای ناشناخته در سرور"}));
+                    throw new Error(errorData.error);
+                }
+                return await response.json();
+            } catch (error) {
+                console.error('API Call Error:', error);
+                throw new Error(error.message || 'یک خطای ارتباطی با سرور رخ داد.');
+            }
+        }
+        
+        async function handleImageUpload(type) {
+            const input = document.getElementById(`${type}-input`);
+            const resultDiv = document.getElementById(`${type}-result`);
+            if (!input.files || input.files.length === 0) {
+                resultDiv.innerHTML = '<p class="text-red-500">لطفا ابتدا یک فایل انتخاب کنید.</p>';
+                return;
+            }
+            const file = input.files[0];
+            const formData = new FormData();
+            formData.append('image', file);
+            
+            resultDiv.innerHTML = '<div class="loader">در حال پردازش تصویر...</div>';
+            try {
+                const result = await apiCall(type, { method: 'POST', body: formData });
+                resultDiv.innerHTML = result.text ? `<p>${result.text}</p>` : `<img src="${result.imageUrl}" alt="Processed Image" class="result-image">`;
+            } catch (error) {
+                resultDiv.innerHTML = `<p class="text-red-500">خطا: ${error.message}</p>`;
+            }
+        }
+        
+        async function handleTextSubmit(type) {
+            const input = document.getElementById(`${type}-input`);
+            const resultDiv = document.getElementById(`${type}-result`);
+            if (!input.value.trim()) {
+                resultDiv.innerHTML = '<p class="text-red-500">لطفا فیلد ورودی را پر کنید.</p>';
+                return;
+            }
+            
+            resultDiv.innerHTML = '<div class="loader">در حال پردازش درخواست...</div>';
+            try {
+                const result = await apiCall(type, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: input.value })
+                });
+                resultDiv.innerHTML = result.imageUrl ? `<img src="${result.imageUrl}" alt="Generated Image" class="result-image">` : `<p>${result.text}</p>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<p class="text-red-500">خطا: ${error.message}</p>`;
+            }
+        }
+
+        async function handleCompareProducts() {
+            const input1 = document.getElementById('compare-products-input-1');
+            const input2 = document.getElementById('compare-products-input-2');
+            const resultDiv = document.getElementById('compare-products-result');
+            if (!input1.value.trim() || !input2.value.trim()) {
+                resultDiv.innerHTML = '<p class="text-red-500">لطفا نام هر دو محصول را وارد کنید.</p>';
+                return;
+            }
+            resultDiv.innerHTML = '<div class="loader">در حال مقایسه محصولات...</div>';
+            try {
+                 const result = await apiCall('compare-products', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ product1: input1.value, product2: input2.value })
+                });
+                 resultDiv.innerHTML = `<p>${result.text}</p>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<p class="text-red-500">خطا: ${error.message}</p>`;
+            }
+        }
+        
+        async function handleAdvancedSearch() {
+            const channelInput = document.getElementById('advanced-search-channel-input');
+            const queryInput = document.getElementById('advanced-search-query-input');
+            const resultDiv = document.getElementById('advanced-search-result');
+            if (!channelInput.value.trim() || !queryInput.value.trim()) {
+                resultDiv.innerHTML = '<p class="text-red-500">لطفا هم لینک کانال و هم عبارت جستجو را وارد کنید.</p>';
+                return;
+            }
+            resultDiv.innerHTML = '<div class="loader">در حال جستجو در کانال... (این کار ممکن است طولانی شود)</div>';
+            try {
+                 const result = await apiCall('advanced-search', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ channel: channelInput.value, query: queryInput.value })
+                });
+                 resultDiv.innerHTML = `<p>${result.text}</p>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<p class="text-red-500">خطا: ${error.message}</p>`;
+            }
+        }
+
+        async function fetchCurrencyRates() {
+            const contentDiv = document.getElementById('currency-content');
+            contentDiv.innerHTML = '<div class="loader">در حال دریافت اطلاعات...</div>';
+            try {
+                const data = await apiCall('currency', {});
+                contentDiv.innerHTML = `
+                    <p><strong>هر گرم طلای 18:</strong> ${data.gold.geram18 || 'N/A'} ریال</p>
+                    <p><strong>سکه امامی:</strong> ${data.gold.sekee || 'N/A'} ریال</p>
+                    <hr class="border-gray-600 my-2">
+                    <p><strong>دلار آمریکا:</strong> ${data.fiat.usd || 'N/A'} ریال</p>
+                    <p><strong>یورو اروپا:</strong> ${data.fiat.eur || 'N/A'} ریال</p>
+                `;
+            } catch (error) {
+                contentDiv.innerHTML = `<p class="text-red-500">خطا: ${error.message}</p>`;
+            }
+        }
+
+        // Hide Telegram's back button on the main menu initially
+        tg.BackButton.hide();
     </script>
 </body>
 </html>
