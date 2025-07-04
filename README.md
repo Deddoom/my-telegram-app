@@ -12,7 +12,7 @@ This repository contains the frontend source code for a feature-rich Telegram Mi
 ## 📸 App Preview
 
 
-![image](https://drive.google.com/file/d/15G1jKrtaDTHnAwi6Iv6DuwVky-8KL2lZ/view?usp=drivesdk)
+![image]([https://drive.google.com/file/d/15G1jKrtaDTHnAwi6Iv6DuwVky-8KL2lZ/view?usp=drivesdk](https://github.com/Deddoom/my-telegram-app/blob/main/Screenshot.PNG))
 
 
 ---
