@@ -12,7 +12,7 @@ This repository contains the frontend source code for a feature-rich Telegram Mi
 ## 📸 App Preview
 
 
-![image](https://github.com/Deddoom/my-telegram-app/blob/main/Screenshot.PNG)
+<img src="https://github.com/Deddoom/my-telegram-app/blob/main/Screenshot.PNG" alt="App Preview" width="300"/>
 
 
 ---
