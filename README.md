@@ -11,9 +11,8 @@ This repository contains the frontend source code for a feature-rich Telegram Mi
 
 ## 📸 App Preview
 
-*(It's highly recommended to add a screenshot or GIF of your Mini App here!)*
 
-![image](https://github.com/user-attachments/assets/b8352b2f-90e8-468a-a45e-b5c65ac3d052)
+![image](https://drive.google.com/file/d/15G1jKrtaDTHnAwi6Iv6DuwVky-8KL2lZ/view?usp=drivesdk)
 
 
 ---
